@@ -3,8 +3,7 @@
 pragma solidity 0.8.0;
 
 abstract contract ERC20 {
-
-    uint256 private _totalSupply;
+    uint256 internal _totalSupply;
     mapping(address => uint256) internal _balances;
     mapping(address => mapping(address => uint256)) internal _allowances;
 
@@ -16,23 +15,25 @@ abstract contract ERC20 {
     );
 
     /*
-   * Internal Functions for ERC20 standard logics
-   */
+     * Internal Functions for ERC20 standard logics
+     */
 
-    function _transfer(address from, address to, uint256 amount)
-        internal
-        returns (bool success)
-    {
+    function _transfer(
+        address from,
+        address to,
+        uint256 amount
+    ) internal returns (bool success) {
         _balances[from] = _balances[from] - amount;
         _balances[to] = _balances[to] + amount;
         emit Transfer(from, to, amount);
         success = true;
     }
 
-    function _approve(address owner, address spender, uint256 amount)
-        internal
-        returns (bool success)
-    {
+    function _approve(
+        address owner,
+        address spender,
+        uint256 amount
+    ) internal returns (bool success) {
         _allowances[owner][spender] = amount;
         emit Approval(owner, spender, amount);
         success = true;
@@ -59,12 +60,13 @@ abstract contract ERC20 {
     }
 
     /*
-   * public view functions to view common data
-   */
+     * public view functions to view common data
+     */
 
     function totalSupply() external view returns (uint256 total) {
         total = _totalSupply;
     }
+
     function balanceOf(address owner) external view returns (uint256 balance) {
         balance = _balances[owner];
     }
@@ -78,25 +80,30 @@ abstract contract ERC20 {
     }
 
     /*
-   * External view Function Interface to implement on final contract
-   */
-    function name() virtual external view returns (string memory tokenName);
-    function symbol() virtual external view returns (string memory tokenSymbol);
-    function decimals() virtual external view returns (uint8 tokenDecimals);
+     * External view Function Interface to implement on final contract
+     */
+    function name() external view virtual returns (string memory tokenName);
+
+    function symbol() external view virtual returns (string memory tokenSymbol);
+
+    function decimals() external view virtual returns (uint8 tokenDecimals);
 
     /*
-   * External Function Interface to implement on final contract
-   */
+     * External Function Interface to implement on final contract
+     */
     function transfer(address to, uint256 amount)
-        virtual
         external
-        returns (bool success);
-    function transferFrom(address from, address to, uint256 amount)
         virtual
-        external
         returns (bool success);
+
+    function transferFrom(
+        address from,
+        address to,
+        uint256 amount
+    ) external virtual returns (bool success);
+
     function approve(address spender, uint256 amount)
-        virtual
         external
+        virtual
         returns (bool success);
 }
